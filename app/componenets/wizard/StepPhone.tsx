@@ -93,6 +93,7 @@ export function StepPhone() {
 
       // Move to the next step
       setStep(2);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error('Something went wrong. Please try again.');
     } finally {
@@ -104,7 +105,7 @@ export function StepPhone() {
     <div className='w-full max-w-md mx-auto'>
       <div className='text-center mb-8'>
         <h2 className='text-3xl font-bold tracking-tight text-gray-900'>
-          Let's Get Started
+          Let`&apos;s Get Started
         </h2>
         <p className='mt-2 text-sm text-gray-600'>
           First, we need some basic information to identify you.

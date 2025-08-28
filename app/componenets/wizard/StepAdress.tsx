@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useWizardStore } from '@/app/store/wizad-store';
+import { useWizardStore } from '@/store/wizard-store';
 import {
   addressStepSchema,
   AddressStepData,
@@ -58,6 +58,12 @@ const FormError = ({ message }: { message?: string }) => {
   return <p className='text-sm font-medium text-red-600 mt-1'>{message}</p>;
 };
 
+interface StepAddressProps {
+  street: string;
+  lga: string;
+  state: string;
+  country: string;
+}
 export function StepAddress() {
   const { data, setData, setStep } = useWizardStore();
   const [isLoading, setIsLoading] = useState(false);
@@ -65,10 +71,10 @@ export function StepAddress() {
   const form = useForm<AddressStepData>({
     resolver: zodResolver(addressStepSchema),
     defaultValues: {
-      street: (data as any).street || '',
-      lga: (data as any).lga || '',
-      state: (data as any).state || '',
-      country: (data as any).country || 'Nigeria',
+      street: data.street || '',
+      lga: data.lga || '',
+      state: data.state || '',
+      country: data.country || 'Nigeria',
     },
   });
 

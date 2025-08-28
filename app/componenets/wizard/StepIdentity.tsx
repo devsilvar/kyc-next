@@ -113,7 +113,7 @@ export function StepIdentity() {
         setStep(4);
       } else {
         throw new Error(response.data.error || 'Verification failed.');
-      }
+      } // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.error ||

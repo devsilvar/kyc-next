@@ -32,6 +32,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: 'Invalid request body', errors: validation.error.flatten() }, { status: 400 });
     }
   } catch (error) {
+    console.log(error)
     return NextResponse.json({ message: 'Invalid JSON in request body' }, { status: 400 });
   }
 
@@ -78,7 +79,8 @@ export async function POST(request: Request) {
     } else {
         return NextResponse.json({ success: false, message: response.data?.resultText || "Verification failed" }, { status: 400 });
     }
-  } catch (error: any) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error:any) {
     console.error('Error from Smile ID API:', error.response?.data || error.message);
     return NextResponse.json({
       success: false,

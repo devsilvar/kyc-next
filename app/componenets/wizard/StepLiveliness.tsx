@@ -92,6 +92,7 @@ export function StepLiveness() {
       } else {
         throw new Error(response.data.error || 'Liveness check failed.');
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.error ||
@@ -112,8 +113,8 @@ export function StepLiveness() {
           Liveness Check
         </h2>
         <p className='mt-2 text-sm text-gray-600'>
-          We need to verify you're a real person. Please position your face in
-          the frame.
+          We need to verify you &apos; re a real person. Please position your
+          face in the frame.
         </p>
       </div>
 

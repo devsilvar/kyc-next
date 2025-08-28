@@ -16,6 +16,8 @@ type VerificationData = {
   selfieImage?: Blob;
 };
 
+
+
 // This new object will track the completion status of each verification step.
 type VerificationStatus = {
   isPhoneVerified: boolean;
