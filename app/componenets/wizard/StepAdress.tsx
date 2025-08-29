@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useWizardStore } from '@/store/wizard-store';
+import { useWizardStore } from '@/app/store/wizad-store';
 import {
   addressStepSchema,
   AddressStepData,
