@@ -93,6 +93,7 @@ export async function POST(request: Request) {
     const response = await axios.post(smileIDApiUrl, smileIDRequestBody, { headers });
     console.log("Smile ID Response (Success):", response.data);
     return NextResponse.json({ success: true, ...response.data });
+       // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error('Smile ID Response (Error):', error.response?.data || error.message);
     return NextResponse.json({
