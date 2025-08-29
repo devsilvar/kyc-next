@@ -80,17 +80,19 @@ export function StepPhone() {
     try {
       // In a real app, this API call would trigger an OTP to be sent.
       // For now, we'll simulate a successful verification.
-      // const response = await axios.post('/api/verify-phone', values);
+      const response = await axios.post(
+        'https://kyc-next.vercel.app/api/verify-phone',
+        values
+      );
 
+      console.log(response.data);
       // MOCK API CALL
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
+      // await new Promise((resolve) => setTimeout(resolve, 1500));
       // Update our global state
+      console.log(values);
       setData(values);
       setStepStatus('isPhoneVerified', true);
-
       toast.success('Personal details saved');
-
       // Move to the next step
       setStep(2);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
