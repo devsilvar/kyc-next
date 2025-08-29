@@ -81,7 +81,7 @@ export function StepPhone() {
       // In a real app, this API call would trigger an OTP to be sent.
       // For now, we'll simulate a successful verification.
       const response = await axios.post(
-        'https://kyc-next.vercel.app/api/verify-pho',
+        'https://kyc-next.vercel.app/api/verify-phone',
         values
       );
 
