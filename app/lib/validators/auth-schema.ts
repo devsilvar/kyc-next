@@ -8,7 +8,7 @@ export const personalInfoStepSchema = z.object({
   firstName: z.string().min(2, { message: "First name must be at least 2 characters." }),
   lastName: z.string().min(2, { message: "Last name must be at least 2 characters." }),
   // Basic validation for a Nigerian phone number (starts with 0, followed by 10 digits)
-  phoneNumber: z.string().regex(/^0[789][01]\d{8}$/, { message: "Please enter a valid Nigerian phone number." }),
+  phoneNumber: z.string().regex(/^[0-9]{11}$/, { message: "Please enter a valid Nigerian phone number." }),
 });
 
 /**
