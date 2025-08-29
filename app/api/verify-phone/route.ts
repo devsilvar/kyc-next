@@ -11,7 +11,7 @@ const requestSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
 });
-
+// '''
 // --- Main API Handler ---
 export async function POST(request: Request) {
   // 1. Check for required environment variables
