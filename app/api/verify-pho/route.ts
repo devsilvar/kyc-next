@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     const { signature, timestamp } = sig.generate_signature();
 
     const payload = {
-      callback_url: "https://yourapp.com/callback",
+      // callback_url: "https://yourapp.com/callback",
       country: country || "NG",
       phone_number,
       match_fields: {
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     };
 
     const response = await fetch(
-      "https://testapi.smileidentity.com/v2/verify-phone-number",
+      "https://api.smileidentity.com/v2/verify-phone-number",
       {
         method: "POST",
         headers: {
