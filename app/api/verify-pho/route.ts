@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     const API_KEY = process.env.SMILE_ID_AUTH_TOKEN!;
 
     // ✅ Force PRODUCTION environment
-    const sig = new Signature(PARTNER_ID, API_KEY, { sid_server: "0" });
+    const sig = new Signature(PARTNER_ID, API_KEY);
     const { signature, timestamp } = sig.generate_signature();
 
     const payload = {
@@ -22,6 +22,10 @@ export async function POST(req: Request) {
         first_name,
         last_name,
       },
+        partner_params: {
+    job_id: `job-${Date.now()}`,
+    user_id: `user-${Date.now()}`,
+  },
     };
 
     const response = await fetch(
