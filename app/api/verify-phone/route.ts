@@ -11,12 +11,12 @@ const requestSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
 });
-// '''
+
 // --- Main API Handler ---
 export async function POST(request: Request) {
   // 1. Check for required environment variables
   const PARTNER_ID = process.env.SMILE_ID_PARTNER_ID;
-  const AUTH_TOKEN = 'SkP1FINxj0TPGD727fYxHhwV0CsRGqmebewXNsnSP6YQsa9FM8WqorMGOhNA7jk6YpQVeaAFDh8eDJEXAO5X+ZQpqHCZIB0zxMue2j8+7605ZzMn2A+v6lmwE4unn++y4HImZXIde36jsZTRry12Sz3jNm//pDQeHVN6QSPKoIQ=';
+  const AUTH_TOKEN = process.env.SMILE_ID_AUTH_TOKEN;
 
   if (!PARTNER_ID || !AUTH_TOKEN) {
     console.error("Missing Smile ID environment variables");
