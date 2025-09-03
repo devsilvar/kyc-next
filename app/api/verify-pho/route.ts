@@ -1,6 +1,7 @@
 // /app/api/verify-phone/route.ts
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
+import { Signature } from "smile-identity-core";
 import axios from 'axios';
 import { z } from 'zod';
 
@@ -13,15 +14,18 @@ const requestSchema = z.object({
 
 export async function POST(request: Request) {
   // --- 1. Load environment variables ---
-  const PARTNER_ID = process.env.SMILE_ID_PARTNER_ID;
-  const API_KEY = process.env.SMILE_ID_AUTH_TOKEN; // API key from SmileID portal (Sandbox or Prod)
+const PARTNER_ID = process.env.SMILE_ID_PARTNER_ID;
+const API_KEY = process.env.SMILE_ID_AUTH_TOKEN; // API key from SmileID portal (Sandbox or Prod)
 
-  if (!PARTNER_ID || !API_KEY) {
-    return NextResponse.json(
-      { success: false, message: 'Missing Smile ID credentials' },
-      { status: 500 }
-    );
-  }
+if (!PARTNER_ID || !API_KEY) {
+  return NextResponse.json(
+    { success: false, message: 'Missing Smile ID credentials' },
+    { status: 500 }
+  );
+}
+
+const sig = new Signature(PARTNER_ID, API_KEY);
+console.log(sig.generate_signature());
 
   // --- 2. Parse & validate request body ---
   let body;
@@ -49,7 +53,7 @@ export async function POST(request: Request) {
 
   // IMPORTANT: Smile ID API key is base64 encoded. If your key is already raw, remove Buffer.from(..., 'base64').
   const signature = crypto
-    .createHmac('sha256', Buffer.from(API_KEY, 'base64'))
+    .createHmac('sha256',API_KEY)
     .update(signatureString, 'utf8')
     .digest('base64');
 
@@ -69,6 +73,12 @@ export async function POST(request: Request) {
       user_id: `user-${crypto.randomUUID()}`,
     },
   };
+
+  console.log("PARTNER_ID:", PARTNER_ID);
+console.log("API_KEY (first 10 chars):", API_KEY.slice(0, 10));
+console.log("timestamp:", timestamp);
+console.log("signatureString:", signatureString);
+console.log("signature:", signature);
 
   const headers = {
     'Content-Type': 'application/json',
