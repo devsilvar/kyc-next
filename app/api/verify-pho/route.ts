@@ -11,12 +11,11 @@ export async function POST(req: Request) {
     const PARTNER_ID = process.env.SMILE_ID_PARTNER_ID!;
     const API_KEY = process.env.SMILE_ID_AUTH_TOKEN!;
 
-    // ✅ Use ONLY SDK-generated signature
-    const sig = new Signature(PARTNER_ID, API_KEY);
+    // ✅ Force PRODUCTION environment
+    const sig = new Signature(PARTNER_ID, API_KEY, { sid_server: "0" });
     const { signature, timestamp } = sig.generate_signature();
 
     const payload = {
-      // callback_url: "https://yourapp.com/callback",
       country: country || "NG",
       phone_number,
       match_fields: {
@@ -39,9 +38,17 @@ export async function POST(req: Request) {
       }
     );
 
-    const data = await response.json();
+    const raw = await response.text();
+    console.log("SmileID raw response:", raw);
+
+    let data;
+    try {
+      data = JSON.parse(raw);
+    } catch {
+      data = { error: "Invalid JSON from SmileID", raw };
+    }
+
     return NextResponse.json(data);
-     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
