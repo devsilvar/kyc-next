@@ -1,114 +1,48 @@
-// /app/api/verify-phone/route.ts
-import { NextResponse } from 'next/server';
-import crypto from 'crypto';
-import { Signature } from "smile-identity-core";
-import axios from 'axios';
-import { z } from 'zod';
+// app/api/verify-phone/route.ts
+import { NextResponse } from "next/server";
+import smileIdentityCore from "smile-identity-core";
 
-// Validate incoming request body
-const requestSchema = z.object({
-  phoneNumber: z.string(),
-  firstName: z.string(),
-  lastName: z.string(),
-});
+const { Signature } = smileIdentityCore;
 
-export async function POST(request: Request) {
-  // --- 1. Load environment variables ---
-const PARTNER_ID = process.env.SMILE_ID_PARTNER_ID;
-const API_KEY = process.env.SMILE_ID_AUTH_TOKEN; // API key from SmileID portal (Sandbox or Prod)
-
-if (!PARTNER_ID || !API_KEY) {
-  return NextResponse.json(
-    { success: false, message: 'Missing Smile ID credentials' },
-    { status: 500 }
-  );
-}
-
-const sig = new Signature(PARTNER_ID, API_KEY);
-console.log(sig.generate_signature());
-
-  // --- 2. Parse & validate request body ---
-  let body;
+export async function POST(req: Request) {
   try {
-    body = await request.json();
-    const validation = requestSchema.safeParse(body);
-    if (!validation.success) {
-      return NextResponse.json(
-        { success: false, message: 'Invalid request body', errors: validation.error.flatten() },
-        { status: 400 }
-      );
-    }
-  } catch {
-    return NextResponse.json(
-      { success: false, message: 'Invalid JSON in request body' },
-      { status: 400 }
-    );
-  }
+    const { phone_number, country, first_name, last_name } = await req.json();
 
-  const { phoneNumber, firstName, lastName } = body;
+    const PARTNER_ID = process.env.SMILE_ID_PARTNER_ID!;
+    const API_KEY = process.env.SMILE_ID_AUTH_TOKEN!;
 
-  // --- 3. Generate timestamp & signature ---
-  const timestamp = new Date().toISOString();
-  const signatureString = `${timestamp}${PARTNER_ID}sid_request`;
+    // ✅ Use ONLY SDK-generated signature
+    const sig = new Signature(PARTNER_ID, API_KEY);
+    const { signature, timestamp } = sig.generate_signature();
 
-  // IMPORTANT: Smile ID API key is base64 encoded. If your key is already raw, remove Buffer.from(..., 'base64').
-  const signature = crypto
-    .createHmac('sha256',API_KEY)
-    .update(signatureString, 'utf8')
-    .digest('base64');
-
-  // --- 4. Prepare Smile ID request ---
-  const smileIDApiUrl = 'https://testapi.smileidentity.com/v2/verify-phone-number';
-
-  const smileIDRequestBody = {
-    callback_url: "https://yourapp.com/callback", // required, even in sync calls
-    country: "NG",
-    phone_number: phoneNumber,
-    match_fields: {
-      first_name: firstName,
-      last_name: lastName,
-    },
-    partner_params: {
-      job_id: `job-${crypto.randomUUID()}`,
-      user_id: `user-${crypto.randomUUID()}`,
-    },
-  };
-
-  console.log("PARTNER_ID:", PARTNER_ID);
-console.log("API_KEY (first 10 chars):", API_KEY.slice(0, 10));
-console.log("timestamp:", timestamp);
-console.log("signatureString:", signatureString);
-console.log("signature:", signature);
-
-  const headers = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'smileid-partner-id': PARTNER_ID,
-    'smileid-request-signature': signature,
-    'smileid-timestamp': timestamp,
-    'smileid-source-sdk': 'rest_api',
-    'smileid-source-sdk-version': '1.0.0',
-  };
-
-  // --- 5. Call Smile ID API ---
-  try {
-    const response = await axios.post(smileIDApiUrl, smileIDRequestBody, { headers });
-
-    return NextResponse.json({
-      success: true,
-      data: response.data,
-    });
-     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    console.error("Smile ID API Error:", error.response?.data || error.message);
-
-    return NextResponse.json(
-      {
-        success: false,
-        message: 'Failed to verify phone number',
-        details: error.response?.data || error.message,
+    const payload = {
+      callback_url: "https://yourapp.com/callback",
+      country: country || "NG",
+      phone_number,
+      match_fields: {
+        first_name,
+        last_name,
       },
-      { status: error.response?.status || 500 }
+    };
+
+    const response = await fetch(
+      "https://testapi.smileidentity.com/v2/verify-phone-number",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "smileid-partner-id": PARTNER_ID,
+          "smileid-timestamp": String(timestamp),
+          "smileid-request-signature": signature,
+        },
+        body: JSON.stringify(payload),
+      }
     );
+
+    const data = await response.json();
+    return NextResponse.json(data);
+     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
