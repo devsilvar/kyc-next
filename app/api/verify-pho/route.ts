@@ -15,18 +15,23 @@ export async function POST(req: Request) {
     const sig = new Signature(PARTNER_ID, API_KEY);
     const { signature, timestamp } = sig.generate_signature();
 
-    const payload = {
-      country: country || "NG",
-      phone_number,
-      match_fields: {
-        first_name,
-        last_name,
-      },
-        partner_params: {
+const payload = {
+  country: country || "NG",
+  phone_number: phone_number.startsWith("0")
+    ? `234${phone_number.slice(1)}`
+    : phone_number,
+  partner_params: {
     job_id: `job-${Date.now()}`,
     user_id: `user-${Date.now()}`,
+    job_type: 5, // phone verification
   },
-    };
+  match_fields: [
+    { first_name },
+    { last_name }
+  ]
+};
+
+
 
     const response = await fetch(
       "https://api.smileidentity.com/v2/verify-phone-number",
