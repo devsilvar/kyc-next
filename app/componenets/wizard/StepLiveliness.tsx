@@ -77,7 +77,7 @@ export function StepLiveness() {
       // Now, send this data to your backend for final verification.
       const response = await axios.post('/api/verify-liveness', {
         livenessData: mockLivenessData,
-        userId: data.phoneNumber, // Example of sending a user identifier
+        userId: data.phone_number, // Example of sending a user identifier
       });
 
       if (response.data.success) {

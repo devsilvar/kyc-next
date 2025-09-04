@@ -7,9 +7,9 @@ import { z } from 'zod';
 
 // Zod schema for validating the incoming request body
 const requestSchema = z.object({
-  phoneNumber: z.string(),
-  firstName: z.string(),
-  lastName: z.string(),
+  phone_number: z.string(),
+  first_name: z.string(),
+  last_name: z.string(),
 });
 
 // --- Main API Handler ---
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Invalid JSON in request body' }, { status: 400 });
   }
 
-  const { phoneNumber, firstName, lastName } = body;
+  const { phone_number, first_name, last_name } = body;
 
   // 3. Generate the dynamic signature and timestamp
   const timestamp = new Date().toISOString();
@@ -50,10 +50,10 @@ export async function POST(request: Request) {
   const smileIDApiUrl = 'https://testapi.smileidentity.com/v2/verify-phone-number';
   const smileIDRequestBody = {
     country: "NG",
-    phone_number: phoneNumber,
+    phone_number: phone_number,
     match_fields: {
-      first_name: firstName,
-      last_name: lastName,
+      first_name: first_name,
+      last_name: last_name,
     },
     partner_params: {
       job_id: `job-${crypto.randomUUID()}`, // Use crypto for better uniqueness

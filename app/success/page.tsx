@@ -104,7 +104,7 @@ export default function SuccessPage() {
               transition={{ delay: 0.6, duration: 0.5 }}
               className='text-gray-600 mt-2'
             >
-              Thank you, {data.firstName || 'user'}. Your identity has been
+              Thank you, {data.first_name || 'user'}. Your identity has been
               confirmed and your account is secure.
             </motion.p>
 

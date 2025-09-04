@@ -98,8 +98,8 @@ export function StepIdentity() {
 
     try {
       const payload = {
-        firstName: data.firstName,
-        lastName: data.lastName,
+        first_name: data.first_name,
+        last_name: data.last_name,
         nin: values.nin,
         bvn: values.bvn,
       };

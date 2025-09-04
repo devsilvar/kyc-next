@@ -112,8 +112,8 @@ export function StepDocument() {
       formData.append('documentType', values.documentType);
       formData.append('documentImage', values.documentImage);
       // Append other user data if needed by the API
-      formData.append('firstName', data.firstName || '');
-      formData.append('lastName', data.lastName || '');
+      formData.append('first_name', data.first_name || '');
+      formData.append('last_name', data.last_name || '');
 
       const response = await axios.post('/api/verify-document', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
