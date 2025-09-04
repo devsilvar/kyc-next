@@ -3,9 +3,9 @@ import { create } from 'zustand';
 
 // This object holds the data collected from the user across all steps.
 type VerificationData = {
-  firstName?: string;
-  lastName?: string;
-  phoneNumber?: string;
+  first_name?: string;
+  last_name?: string;
+  phone_number?: string;
   state?: string;
   lga?:string;
   street?:string;

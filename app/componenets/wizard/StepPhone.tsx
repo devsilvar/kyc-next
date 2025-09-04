@@ -69,13 +69,14 @@ export function StepPhone() {
   const form = useForm<PersonalInfoStepData>({
     resolver: zodResolver(personalInfoStepSchema),
     defaultValues: {
-      firstName: data.firstName || '',
-      lastName: data.lastName || '',
-      phoneNumber: data.phoneNumber || '',
+      first_name: data.first_name || '',
+      last_name: data.last_name || '',
+      phone_number: data.phone_number || '',
     },
   });
 
   async function onSubmit(values: PersonalInfoStepData) {
+    console.log(values);
     setIsLoading(true);
     try {
       // In a real app, this API call would trigger an OTP to be sent.
@@ -115,36 +116,36 @@ export function StepPhone() {
       </div>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
         <div>
-          <FormLabel htmlFor='firstName'>First Name</FormLabel>
+          <FormLabel htmlFor='first_name'>First Name</FormLabel>
           <FormInput
-            id='firstName'
+            id='first_name'
             type='text'
             placeholder='John'
-            {...form.register('firstName')}
+            {...form.register('first_name')}
           />
-          <FormError message={form.formState.errors.firstName?.message} />
+          <FormError message={form.formState.errors.first_name?.message} />
         </div>
 
         <div>
-          <FormLabel htmlFor='lastName'>Last Name</FormLabel>
+          <FormLabel htmlFor='last_name'>Last Name</FormLabel>
           <FormInput
-            id='lastName'
+            id='last_name'
             type='text'
             placeholder='Doe'
-            {...form.register('lastName')}
+            {...form.register('last_name')}
           />
-          <FormError message={form.formState.errors.lastName?.message} />
+          <FormError message={form.formState.errors.last_name?.message} />
         </div>
 
         <div>
-          <FormLabel htmlFor='phoneNumber'>Phone Number</FormLabel>
+          <FormLabel htmlFor='phone_number'>Phone Number</FormLabel>
           <FormInput
-            id='phoneNumber'
+            id='phone_number'
             type='tel'
             placeholder='08012345678'
-            {...form.register('phoneNumber')}
+            {...form.register('phone_number')}
           />
-          <FormError message={form.formState.errors.phoneNumber?.message} />
+          <FormError message={form.formState.errors.phone_number?.message} />
         </div>
 
         <div className='pt-2'>
