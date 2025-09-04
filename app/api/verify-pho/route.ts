@@ -46,7 +46,7 @@ const payload = {
   partner_params: {
     job_id: `job-${Date.now()}`,
     user_id: `user-${Date.now()}`,
-    job_type: 5, // phone verification
+
   },
   match_fields,
   
