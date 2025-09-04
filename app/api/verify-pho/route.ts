@@ -17,9 +17,7 @@ export async function POST(req: Request) {
 
 const payload = {
   country: country || "NG",
-  phone_number: phone_number.startsWith("0")
-    ? `234${phone_number.slice(1)}`
-    : phone_number,
+  phone_number: phone_number,
   partner_params: {
     job_id: `job-${Date.now()}`,
     user_id: `user-${Date.now()}`,
